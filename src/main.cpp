@@ -13,7 +13,7 @@ int main(int argc, char* argv[]){
         df.tag_content_doubles();
         std::cout<<df;
     } catch (const std::exception& ex){
-        std::cerr<<ex.what()<<std::endl;
+        std::cerr<<ex.what();
     }
     return 0;
 }

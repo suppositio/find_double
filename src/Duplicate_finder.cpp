@@ -102,18 +102,20 @@ std::ostream& operator<<(std::ostream& os, const Duplicate_finder& df){
             }
         }
     }
-    os << std::endl <<df.iterated_files_<<" files iterated."<<std::endl;
+    os << std::endl <<df.iterated_files_<<" files iterated."<<'\n';
     if (output.empty()){
-        os<<"No duplicate files found in "<<fs::absolute(df.start_dir_.path())<<" and subdirectories."<<std::endl;
+        os<<"No duplicate files found in "<<fs::absolute(df.start_dir_.path())<<" and subdirectories."<<'\n';
         return os;
     } else {
-        os<<file_counter<<" duplicate files found in "<<fs::absolute(df.start_dir_.path())<<" and subdirectories."<<std::endl<<std::endl;
+        os<<file_counter<<" non-unique files in "<< output.size()
+            <<" groups of files with idendical content found in "<<fs::absolute(df.start_dir_.path())
+            <<" and subdirectories."<<'\n'<<'\n';
         for (const auto& [res_tag, group]: output){
-            os << "Group "<<res_tag<<": "<<group.size()<<" files"<<std::endl<<std::endl;
+            os << "Group "<<res_tag<<": "<<group.size()<<" files"<<'\n'<<'\n';
             for (const auto& file_path:group){
-                os<<file_path<<std::endl;
+                os<<file_path<<'\n';
             }
-            os << std::endl;
+            os << '\n';
         }
     }
     return os;
