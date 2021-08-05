@@ -17,6 +17,12 @@ Duplicate_finder::Duplicate_finder (const fs::path& start_path)
         }
 }
 
+void Duplicate_finder::process(){
+    collect_files();
+    remove_size_singles();
+    tag_content_doubles();
+}
+
 void Duplicate_finder::collect_files() {
     fs::recursive_directory_iterator dir_it(start_dir_, fs::directory_options::skip_permission_denied);
     while (dir_it!=fs::end(dir_it)){

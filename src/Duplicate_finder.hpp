@@ -21,8 +21,9 @@ protected:
     Dir_container dc_;
 public:
     explicit Duplicate_finder(const fs::path& start_path);
+    void process();
     ~Duplicate_finder() = default;
-
+protected:
     void collect_files();
     void remove_size_singles();
     void tag_content_doubles();
