@@ -63,10 +63,12 @@ struct FileCompareTest: public Test{
         {
             fs::create_directory(test_data_path);
         }
-        
-    ~FileCompareTest() noexcept {
-         fs::remove_all(test_data_path);
+
+    void TearDown() override {
+        fs::remove_all(test_data_path);
     }
+
+    ~FileCompareTest() noexcept = default;
     
     void fill_master_non_empty_content(){
         fill_content(master_non_empty_content);
@@ -94,7 +96,7 @@ struct FileCompareTest: public Test{
         create_file (master_non_empty, master_non_empty_content);
     }
 
-    void create_same_nonempty(){
+    void create_same_non_empty(){
         create_master_non_empty();
         fs::copy_file(master_non_empty, same_non_empty);
     }
@@ -127,29 +129,59 @@ private:
 };
 
 TEST_F(FileCompareTest, EmptyEmpty){
-    EXPECT_TRUE(true);
+    create_same_empty();
+    fs::directory_entry master_empty_dir{master_empty};
+    fs::directory_entry same_empty_dir{same_empty};
+    auto result = fc(master_empty_dir, same_empty_dir);
+    EXPECT_TRUE(*result);
 }
 
 TEST_F(FileCompareTest, EmptyNonEmpty){
-    EXPECT_TRUE(true);
+    create_master_non_empty();
+    create_master_empty();
+    fs::directory_entry master_non_empty_dir{master_non_empty};
+    fs::directory_entry master_empty_dir{master_empty};
+    auto result = fc(master_non_empty_dir, master_empty_dir);    
+    EXPECT_FALSE(*result);
 }
 
 TEST_F(FileCompareTest, SameNonEmpty){
-    EXPECT_TRUE(true);
+    create_same_non_empty();
+    fs::directory_entry master_non_empty_dir{master_non_empty};
+    fs::directory_entry same_non_empty_dir{same_non_empty};
+    auto result = fc(master_non_empty_dir, same_non_empty_dir);   
+    EXPECT_TRUE(*result);
 }
 
 TEST_F(FileCompareTest, DifferentEqualSize){
-    EXPECT_TRUE(true);
+    create_master_non_empty();
+    create_different_equal_size();
+    fs::directory_entry master_non_empty_dir{master_non_empty};
+    fs::directory_entry different_equal_size_dir{different_equal_size};
+    auto result = fc(master_non_empty_dir, different_equal_size_dir);    
+    EXPECT_FALSE(*result);
 }
 
 TEST_F(FileCompareTest, DifferentUnequalSize){
-    EXPECT_TRUE(true);
+    create_master_non_empty();
+    create_different_unequal_size();
+    fs::directory_entry master_non_empty_dir{master_non_empty};
+    fs::directory_entry different_unequal_size_dir{different_unequal_size};
+    auto result = fc(master_non_empty_dir, different_unequal_size_dir);    
+    EXPECT_FALSE(*result);
 }
 
 TEST_F(FileCompareTest, NonexistentOne){
-    EXPECT_TRUE(true);
+    create_master_non_empty();
+    fs::directory_entry master_non_empty_dir{master_non_empty};
+    fs::directory_entry nonexistent1_dir{nonexistent1};    
+    auto result = fc(master_non_empty_dir, nonexistent1_dir); 
+    EXPECT_FALSE(*result);
 }
 
 TEST_F(FileCompareTest, NonexistentBoth){
-    EXPECT_TRUE(true);
+    fs::directory_entry nonexistent1_dir{nonexistent1};
+    fs::directory_entry nonexistent2_dir{nonexistent2};
+    auto result = fc(nonexistent1_dir, nonexistent2_dir);
+    EXPECT_FALSE(result);
 }
