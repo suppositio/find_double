@@ -88,7 +88,7 @@ struct FileCompareTest: public Test{
 
     void create_same_empty(){
         create_master_empty();
-        fs::copy_file(master_empty, same_empty);
+        create_file(same_empty);
     }
 
     void create_master_non_empty(){
@@ -98,7 +98,7 @@ struct FileCompareTest: public Test{
 
     void create_same_non_empty(){
         create_master_non_empty();
-        fs::copy_file(master_non_empty, same_non_empty);
+        create_file (same_non_empty, master_non_empty_content);
     }
 
     void create_different_equal_size(){
